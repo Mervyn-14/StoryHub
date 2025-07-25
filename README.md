@@ -1,4 +1,4 @@
-📖 StoryHub
+📖 StoryHub - A story sharing platform
 
 Hi there! 
 Welcome to **StoryHub** — a simple and clean story-sharing platform I built using Flask and MySQL. It's designed to let users post their own stories, read others', and interact with them through likes, comments, and bookmarks. Everything runs inside a neat UI that’s easy to navigate.
