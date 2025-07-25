@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ story.title }} - StoryHub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lora:wght@400;600&family=Open+Sans:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent entire page from scrolling */
+        }
+        body {
+            font-family: 'Lora', serif;
+            background: #1F2528;
+            position: relative;
+        }
+        .container {
+            max-width: clamp(800px, 90vw, 1400px);
+            z-index: 1;
+            position: fixed; /* Fix container to viewport */
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 100vh;
+            padding: clamp(1rem, 3vw, 2rem);
+            display: flex;
+            flex-direction: column;
+        }
+        canvas#starry {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.9;
+        }
+        .story-wrapper {
+            flex: 1;
+            overflow: hidden; /* Contain story scrolling */
+            display: flex;
+            flex-direction: row;
+            gap: 2rem;
+            height: calc(100vh - 12rem); /* Adjust height to fit within viewport */
+            margin-bottom: 2rem;
+        }
+        .story-content {
+            background: rgba(249, 246, 240, 0.95);
+            border-radius: 15px;
+            padding: clamp(1rem, 2vw, 2rem);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            border: 2px solid #A68A64;
+            font-size: clamp(1rem, 1.2vw, 1.3rem);
+            line-height: 1.8;
+            overflow-y: auto; /* Allow only story content to scroll */
+            flex: 1;
+            height: 100%; /* Take full height of wrapper */
+        }
+        .comment-section {
+            background: rgba(249, 246, 240, 0.95);
+            border-radius: 15px;
+            padding: clamp(0.8rem, 1.5vw, 1.5rem);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            border: 2px solid #A68A64;
+            width: clamp(200px, 25%, 350px);
+            height: 100%;
+            overflow-y: auto; /* Allow internal scrolling if comments overflow */
+        }
+        .btn-action {
+            background: #2C2E4A;
+            color: #F9F6F0;
+            border: none;
+            padding: clamp(0.5rem, 1vw, 0.8rem) clamp(1rem, 2vw, 1.5rem);
+            margin: 0.3rem;
+            font-size: clamp(0.9rem, 1vw, 1.1rem);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-action::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(166, 138, 100, 0.5), transparent);
+            transition: 0.5s;
+        }
+        .btn-action:hover::before {
+            left: 100%;
+        }
+        .btn-action:hover {
+            background: #A68A64;
+            color: #2C2E4A;
+            transform: scale(1.05);
+        }
+        .btn-comment {
+            background: #A68A64;
+            color: #2C2E4A;
+            border: none;
+            padding: clamp(0.4rem, 0.8vw, 0.6rem) clamp(0.8rem, 1.5vw, 1.2rem);
+            font-size: clamp(0.8rem, 0.9vw, 1rem);
+            border-radius: 8px;
+            transition: transform 0.3s;
+        }
+        .btn-comment:hover {
+            transform: scale(1.2);
+            background: #5C4033;
+            color: #F9F6F0;
+        }
+        .btn-back {
+            background: #2C2E4A;
+            color: #F9F6F0;
+            border: none;
+            padding: clamp(0.5rem, 1vw, 0.8rem) clamp(1rem, 2vw, 1.5rem);
+            font-size: clamp(0.9rem, 1vw, 1.1rem);
+            border-radius: 8px;
+        }
+        .btn-back:hover {
+            background: #A68A64;
+            color: #2C2E4A;
+            transform: scale(1.05);
+        }
+        .like-btn, .bookmark-btn {
+            background: transparent;
+            border: none;
+            color: #A68A64;
+            font-size: clamp(1.2rem, 1.5vw, 1.4rem);
+            transition: transform 0.3s;
+            position: relative;
+        }
+        .like-btn:hover, .bookmark-btn:hover {
+            transform: scale(1.5);
+            color: #5C4033;
+        }
+        .like-btn.clicked {
+            animation: heartPulse 0.6s ease-out;
+        }
+        .bookmark-btn.clicked {
+            animation: ribbonUnfurl 0.6s ease-out;
+        }
+        .like-btn::after, .bookmark-btn::after {
+            content: '';
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: #A68A64;
+            border-radius: 50%;
+            opacity: 0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .like-btn.clicked::after, .bookmark-btn.clicked::after {
+            animation: sparkle 0.5s ease-out;
+        }
+        .alert {
+            background: rgba(249, 246, 240, 0.9);
+            border: 1px solid #A68A64;
+            color: #3C2F2F;
+            border-radius: 10px;
+            animation: slideIn 0.5s ease-out;
+            width: 90%;
+            max-width: 500px;
+            position: fixed;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+        .story-title {
+            font-family: 'Cinzel', serif;
+            color: #F9F6F0;
+            font-size: clamp(1.8rem, 3vw, 3rem);
+            margin-bottom: 0.5rem;
+        }
+        .story-meta {
+            font-size: clamp(0.9rem, 1vw, 1.1rem);
+            color: #A68A64;
+            margin-bottom: 1rem;
+        }
+        .comment-title {
+            font-family: 'Cinzel', serif;
+            color: #A68A64;
+            font-size: clamp(1.2rem, 1.5vw, 1.8rem);
+            margin-bottom: 1rem;
+        }
+        .comment-list-item {
+            font-size: clamp(0.8rem, 0.9vw, 1rem);
+        }
+        .comment-input {
+            font-size: clamp(0.8rem, 0.9vw, 1rem);
+            border-radius: 8px;
+        }
+        .back-button-wrapper {
+            position: fixed;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .story-wrapper {
+                flex-direction: column;
+                height: calc(100vh - 10rem);
+                gap: 1rem;
+            }
+            .story-content {
+                padding: 1rem;
+                font-size: clamp(0.9rem, 1.1vw, 1.1rem);
+                height: auto; /* Allow height to adjust */
+                max-height: 60vh; /* Limit height for story content */
+            }
+            .comment-section {
+                padding: 1rem;
+                width: 100%;
+                height: auto;
+                max-height: 30vh; /* Limit height for comments */
+            }
+            .btn-action, .btn-back {
+                padding: 0.4rem 0.8rem;
+                font-size: clamp(0.8rem, 0.9vw, 0.9rem);
+            }
+            .btn-comment {
+                padding: 0.3rem 0.6rem;
+                font-size: clamp(0.7rem, 0.8vw, 0.8rem);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 0.5rem;
+            }
+            .story-wrapper {
+                height: calc(100vh - 8rem);
+            }
+            .story-content {
+                padding: 0.8rem;
+                font-size: clamp(0.8rem, 1vw, 1rem);
+                max-height: 55vh;
+            }
+            .comment-section {
+                padding: 0.8rem;
+                max-height: 25vh;
+            }
+            .btn-action, .btn-back {
+                padding: 0.3rem 0.6rem;
+                font-size: clamp(0.7rem, 0.8vw, 0.8rem);
+            }
+            .btn-comment {
+                padding: 0.2rem 0.5rem;
+                font-size: clamp(0.6rem, 0.7vw, 0.7rem);
+            }
+            .like-btn, .bookmark-btn {
+                font-size: clamp(1rem, 1.2vw, 1.2rem);
+            }
+        }
+
+        @media (min-width: 1920px) {
+            .container {
+                max-width: 1600px;
+            }
+            .story-content {
+                padding: 2.5rem;
+                font-size: clamp(1.2rem, 1.3vw, 1.5rem);
+            }
+            .comment-section {
+                padding: 2rem;
+                width: clamp(300px, 20%, 400px);
+            }
+            .btn-action, .btn-back {
+                padding: 0.8rem 1.8rem;
+                font-size: clamp(1rem, 1.1vw, 1.2rem);
+            }
+            .btn-comment {
+                padding: 0.6rem 1.4rem;
+                font-size: clamp(0.9rem, 1vw, 1.1rem);
+            }
+        }
+
+        /* Animations */
+        @keyframes heartPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.8); }
+            100% { transform: scale(1); }
+        }
+        @keyframes ribbonUnfurl {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.5) rotate(15deg); }
+            100% { transform: scale(1); }
+        }
+        @keyframes sparkle {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(3); }
+        }
+        @keyframes slideIn {
+            from { transform: translate(-50%, -50px); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="starry"></canvas>
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <h2 class="story-title">{{ story.title }}</h2>
+        <p class="story-meta">Genre: {{ story.genre }} | Posted on: {{ story.created_at }} | By: {{ story.username }}</p>
+        <div class="story-wrapper">
+            <div class="story-content animate__animated animate__fadeIn">
+                {{ story.content }}
+                <div class="d-flex gap-3 mt-4">
+                    <form method="POST" action="{{ url_for('like_story', story_id=story.id) }}">
+                        <button type="submit" class="like-btn">❤️ ({{ like_count }})</button>
+                    </form>
+                    <form method="POST" action="{{ url_for('bookmark_story', story_id=story.id) }}">
+                        <button type="submit" class="bookmark-btn">📑</button>
+                    </form>
+                </div>
+            </div>
+            <div class="comment-section">
+                <h3 class="comment-title">Comments</h3>
+                {% if comments %}
+                    <ul class="list-group mb-4">
+                        {% for comment in comments %}
+                            <li class="list-group-item animate__animated animate__fadeIn border-0 comment-list-item">{{ comment.username }}: {{ comment.comment }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="comment-list-item">No comments yet.</p>
+                {% endif %}
+                <form method="POST" action="{{ url_for('add_comment', story_id=story.id) }}">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control comment-input" name="comment" placeholder="Add a comment..." required>
+                        <button type="submit" class="btn btn-comment">Post</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="back-button-wrapper">
+            <a href="{{ url_for('read_stories') }}" class="btn btn-back">Back to Stories</a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Starry night animation
+            const canvas = document.getElementById('starry');
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            const stars = [];
+            const clouds = [];
+
+            function initializeStarsAndClouds() {
+                stars.length = 0;
+                clouds.length = 0;
+                const numStars = Math.floor(window.innerWidth / 20) + 30;
+                const numClouds = Math.floor(window.innerWidth / 500) + 3;
+                for (let i = 0; i < numStars; i++) {
+                    stars.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        radius: Math.random() * 2 + 1,
+                        opacity: Math.random() * 0.5 + 0.3
+                    });
+                }
+                for (let i = 0; i < numClouds; i++) {
+                    clouds.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height / 2,
+                        width: Math.random() * 200 + 100,
+                        height: 50 * (window.innerWidth / 1920),
+                        speed: Math.random() * 0.5 + 0.2,
+                        opacity: Math.random() * 0.3 + 0.1
+                    });
+                }
+            }
+            initializeStarsAndClouds();
+            window.addEventListener('resize', initializeStarsAndClouds);
+
+            function animateStarry() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                stars.forEach(star => {
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(166, 138, 100, ${star.opacity})`;
+                    ctx.fill();
+                    star.opacity = 0.3 + Math.sin(Date.now() * 0.002 + star.x) * 0.2;
+                });
+                clouds.forEach(cloud => {
+                    ctx.beginPath();
+                    ctx.ellipse(cloud.x, cloud.y, cloud.width, cloud.height, 0, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(249, 246, 240, ${cloud.opacity})`;
+                    ctx.fill();
+                    cloud.x += cloud.speed;
+                    if (cloud.x > canvas.width + cloud.width) cloud.x = -cloud.width;
+                });
+                requestAnimationFrame(animateStarry);
+            }
+            animateStarry();
+
+            // Like/bookmark animations
+            document.querySelectorAll('.like-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    btn.classList.add('clicked');
+                    setTimeout(() => btn.classList.remove('clicked'), 600);
+                });
+            });
+            document.querySelectorAll('.bookmark-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    btn.classList.add('clicked');
+                    setTimeout(() => btn.classList.remove('clicked'), 600);
+                });
+            });
+            gsap.from('.story-content', { y: 100, opacity: 0, duration: 1, ease: 'power2.out' });
+            gsap.from('.comment-section', { x: 100, opacity: 0, duration: 1, ease: 'power2.out', delay: 0.3 });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post a New Story - StoryHub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lora:wght@400;600&family=Open+Sans:wght@300;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Lora', serif;
+            background: url('data:image/jpeg;base64,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') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            margin: 0;
+            position: relative;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(31, 37, 40, 0.3);
+            z-index: -1;
+        }
+        canvas#quill-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.5;
+        }
+        .container {
+            position: relative;
+            min-height: 100vh;
+            padding: 0;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20vw;
+            max-width: 250px;
+            min-width: 200px;
+            height: 100%;
+            background: rgba(44, 46, 74, 0.95);
+            color: #F9F6F0;
+            padding: 2vw;
+            overflow-y: auto;
+            border-right: 3px solid #A68A64;
+            z-index: 5;
+            animation: unfurlScrollBottom 1.5s ease-out forwards;
+        }
+        .main-content {
+            margin-left: 22vw;
+            padding: 2vw;
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .content-box {
+            background: #F9F6F0;
+            border: 2px solid #A68A64;
+            border-radius: 10px;
+            padding: 2vw;
+            width: 50vw;
+            max-width: 600px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            animation: quillUnroll 1.5s ease-out forwards;
+        }
+        .content-box h2 {
+            font-family: 'Cinzel', serif;
+            color: #2C2E4A;
+            font-size: 2vw;
+            margin-bottom: 1vw;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 1.5vw;
+        }
+        .form-group label {
+            font-family: 'Lora', serif;
+            color: #2C2E4A;
+            font-size: 1.2vw;
+            display: block;
+            margin-bottom: 0.5vw;
+        }
+        .form-group input[type="text"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8vw;
+            font-family: 'Lora', serif;
+            font-size: 1vw;
+            color: #2C2E4A;
+            background: #FDF9E8;
+            border: 1px solid #A68A64;
+            border-radius: 5px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease;
+        }
+        .form-group input[type="text"]:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #5C4033;
+        }
+        .form-group select {
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%23A68A64" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 0.5vw center;
+            background-size: 1vw;
+            padding-right: 2vw;
+        }
+        .form-group textarea {
+            height: 20vh;
+            resize: vertical;
+        }
+        .btn-action {
+            background: #A68A64 !important;
+            color: #F9F6F0 !important;
+            border: 2px solid #5C4033;
+            padding: 0.8vw 2vw;
+            font-size: 1vw;
+            font-weight: 600;
+            border-radius: 8px;
+            margin: 0.5vw;
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-action:hover {
+            background: #5C4033 !important;
+            color: #F9F6F0 !important;
+            transform: scale(1.1);
+        }
+        .logout-btn {
+            position: fixed;
+            top: 2vh;
+            right: 2vw;
+            z-index: 10;
+        }
+        .sidebar h3 {
+            font-family: 'Cinzel', serif;
+            color: #A68A64;
+            font-size: 1.5vw;
+            margin-bottom: 1vw;
+        }
+        .sidebar .story-list {
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 500;
+            font-size: 1vw;
+            color: #F9F6F0;
+            margin-bottom: 2vw;
+            line-height: 1.8;
+        }
+        .sidebar .story-list a {
+            color: #F9F6F0;
+            font-size: 1vw;
+            position: relative;
+            display: block;
+            margin-bottom: 0.5vw;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .sidebar .story-list a:hover {
+            color: #FFFFFF;
+        }
+        .sidebar a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #FFFFFF;
+            transition: width 0.3s;
+        }
+        .sidebar a:hover::after {
+            width: 100%;
+        }
+        .alert {
+            background: rgba(249, 246, 240, 0.9);
+            border: 1px solid #A68A64;
+            color: #2C2E4A;
+            border-radius: 10px;
+            animation: slideIn 0.5s ease-out;
+            z-index: 18;
+            position: fixed;
+            top: 2vh;
+            width: 90%;
+            max-width: 40vw;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 25vw;
+                max-width: 200px;
+            }
+            .main-content {
+                margin-left: 27vw;
+            }
+            .content-box {
+                width: 60vw;
+                padding: 3vw;
+            }
+            .content-box h2 {
+                font-size: 3vw;
+            }
+            .form-group label {
+                font-size: 1.8vw;
+            }
+            .form-group input[type="text"],
+            .form-group select,
+            .form-group textarea {
+                font-size: 1.5vw;
+                padding: 1vw;
+            }
+            .form-group select {
+                background-size: 1.5vw;
+                padding-right: 3vw;
+            }
+            .btn-action {
+                padding: 1vw 2.5vw;
+                font-size: 1.5vw;
+            }
+            .sidebar h3 {
+                font-size: 2vw;
+            }
+            .sidebar .story-list {
+                font-size: 1.5vw;
+            }
+            .sidebar .story-list a {
+                font-size: 1.5vw;
+                margin-bottom: 1vw;
+            }
+        }
+        @media (max-width: 576px) {
+            .sidebar {
+                width: 30vw;
+                max-width: 180px;
+            }
+            .main-content {
+                margin-left: 32vw;
+            }
+            .content-box {
+                width: 65vw;
+                padding: 4vw;
+            }
+            .content-box h2 {
+                font-size: 4vw;
+            }
+            .form-group label {
+                font-size: 2.2vw;
+            }
+            .form-group input[type="text"],
+            .form-group select,
+            .form-group textarea {
+                font-size: 2vw;
+                padding: 1.2vw;
+            }
+            .form-group select {
+                background-size: 2vw;
+                padding-right: 4vw;
+            }
+            .btn-action {
+                padding: 1.5vw 3vw;
+                font-size: 2vw;
+            }
+            .sidebar .story-list {
+                font-size: 2vw;
+            }
+            .sidebar .story-list a {
+                font-size: 2vw;
+                margin-bottom: 1.2vw;
+            }
+        }
+        @keyframes quillUnroll {
+            0% {
+                transform: scaleX(0) scaleY(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scaleX(1) scaleY(0.1);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scaleX(1) scaleY(1);
+                opacity: 1;
+            }
+        }
+        @keyframes unfurlScrollBottom {
+            0% {
+                height: 0;
+                opacity: 0;
+                transform: translateY(100%);
+            }
+            100% {
+                height: 100%;
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes slideIn {
+            from { transform: translate(-50%, -50px); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="quill-background"></canvas>
+    <div class="container">
+        <div class="sidebar">
+            <h3>Your Stories</h3>
+            <div class="story-list">
+                {% if recent_stories %}
+                    {% for story in recent_stories %}
+                        <a href="{{ url_for('view_story', story_id=story.id) }}">{{ story.title }}</a>
+                    {% endfor %}
+                {% else %}
+                    <p>No stories posted yet.</p>
+                {% endif %}
+            </div>
+            <h3>Bookmarked Stories</h3>
+            <div class="story-list">
+                {% if bookmarked_stories %}
+                    {% for story in bookmarked_stories %}
+                        <a href="{{ url_for('view_story', story_id=story.id) }}">{{ story.title }}</a>
+                    {% endfor %}
+                {% else %}
+                    <p>No stories bookmarked yet.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="main-content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <div class="content-box">
+                <h2>Post a New Story</h2>
+                <form method="POST" action="{{ url_for('post_story') }}">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" id="title" name="title" placeholder="Enter your story title..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="genre">Genre</label>
+                        <select id="genre" name="genre" required>
+                            <option value="" disabled selected>Select a genre</option>
+                            <option value="Fiction">Fiction</option>
+                            <option value="Fantasy">Fantasy</option>
+                            <option value="Mystery">Mystery</option>
+                            <option value="Sci-Fi">Sci-Fi</option>
+                            <option value="Non-Fiction">Non-Fiction</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="content">Story Content</label>
+                        <textarea id="content" name="content" placeholder="Write your story here..." required></textarea>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-action">Post Story</button>
+                        <a href="{{ url_for('profile') }}" class="btn btn-action">Cancel</a>
+                    </div>
+                </form>
+            </div>
+            <form method="POST" action="{{ url_for('logout') }}" class="logout-btn">
+                <button type="submit" class="btn btn-action">Logout</button>
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Background quill animation
+            const canvas = document.getElementById('quill-background');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const quills = [];
+            for (let i = 0; i < 10; i++) {
+                quills.push({
+                    x: Math.random() * canvas.width,
+                    y: canvas.height,
+                    width: 15,
+                    height: 25,
+                    speed: Math.random() * 0.5 + 0.3,
+                    angle: Math.random() * 0.2 - 0.1
+                });
+            }
+            function animateQuills() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                quills.forEach(quill => {
+                    ctx.fillStyle = '#A68A64';
+                    ctx.save();
+                    ctx.translate(quill.x, quill.y);
+                    ctx.rotate(quill.angle);
+                    ctx.beginPath();
+                    ctx.moveTo(-quill.width / 2, quill.height / 2);
+                    ctx.lineTo(0, -quill.height / 2);
+                    ctx.lineTo(quill.width / 2, quill.height / 2);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.restore();
+                    quill.y -= quill.speed;
+                    if (quill.y < -quill.height) {
+                        quill.y = canvas.height + quill.height;
+                        quill.x = Math.random() * canvas.width;
+                    }
+                });
+                requestAnimationFrame(animateQuills);
+            }
+            animateQuills();
+        });
+    </script>
+</body>
+</html>
