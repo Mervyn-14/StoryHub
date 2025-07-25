@@ -12,10 +12,10 @@ app.secret_key = os.getenv('SECRET_KEY', 'a_default_secure_key')  # Use env vari
 def get_db_connection():
     try:
         return mysql.connector.connect(
-            host='localhost',
-            user='root',
-            password='MinatoMervyn@777',
-            database='storyhub_db'
+            host='l', #use your own localhost sql server name
+            user='', #use your own user name of sql
+            password='', #hey there,use your mysql password here
+            database='' #use your database name
         )
     except Error as e:
         print(f"Error connecting to MySQL: {e}")
