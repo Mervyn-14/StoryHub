@@ -26,11 +26,4 @@ This project was built using:
 
 ---
 
-⚙️ How to Run It on Your Machine
 
-Here’s a quick guide to set it up locally:
-
-1. **Clone the repo**  
-```bash
-git clone https://github.com/your-username/StoryHub.git
-cd StoryHub
